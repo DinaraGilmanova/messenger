@@ -18,7 +18,6 @@ export default class ProfileBlock extends Vue {
     return this.$store.state.profile.name;
   }
   get userAvatar(): string {
-    console.log(this.$store.state.profile);
     return this.$store.state.profile.avatar;
   }
 }

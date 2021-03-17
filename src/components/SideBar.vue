@@ -1,12 +1,14 @@
 <template lang="pug">
-  .v-sidebar-menu
-      sidebar-header
-      hr
-      sidebar-list
+  .sidebar
+    sidebar-header
+    hr.hr-line
+    sidebar-list
+    .bottom-btn
+      button.btn-green(@click="fillTestData") Заполнить тестовыми данными
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import SidebarHeader from "@/components/SidebarHeader.vue";
 import SidebarList from "@/components/SidebarList.vue";
 
@@ -17,28 +19,23 @@ import SidebarList from "@/components/SidebarList.vue";
   }
 })
 export default class Sidebar extends Vue {
-  @Prop() private msg!: string;
-  public hover = false;
-  public active = false;
-
-  get itemLinkClass(): { [key: string]: boolean }[] {
-    return [
-      { "vsm--link": true },
-      { "vsm--link_hover": this.hover },
-      { "vsm--link_active": this.active }
-    ];
-  }
-
-  mouseOverEvent(event: Event) {
-    event.stopPropagation();
-    this.hover = true;
-  }
-
-  mouseOutEvent(event: Event) {
-    event.stopPropagation();
-    this.hover = false;
+  fillTestData() {
+    this.$store.dispatch("fillTestData");
   }
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.btn-green {
+  color: white;
+  background: #4aae9b;
+  border: 1px solid #4aae9b;
+  border-radius: 2px;
+  padding: 0.5rem 0.3rem;
+}
+
+.bottom-btn {
+  position: fixed;
+  bottom: 0;
+}
+</style>

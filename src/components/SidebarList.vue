@@ -1,15 +1,16 @@
 <template lang="pug">
   .sidebar-list
-    .vsm-subtitle
-      .vsm-subtitle--title MESSAGES
-      .vsm-subtitle--group history
-    div(v-for="item in groupsList")
-      sidebar-list-item(:item="item")
+    .sidebar-list__header
+      .sidebar-list__header--title MESSAGES
+      .sidebar-list__header--group history
+    div(v-for="(item, index) in groupsList")
+      sidebar-list-item(:title="item.title" :index="index")
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import SidebarListItem from "@/components/SidebarListItem.vue";
+import { GroupMessage } from "@/models/GroupMessage";
 
 @Component({
   components: {
@@ -17,31 +18,8 @@ import SidebarListItem from "@/components/SidebarListItem.vue";
   }
 })
 export default class SidebarList extends Vue {
-  public groupsList: { title: string; count: number }[] = [
-    { title: "My Questions", count: 188 },
-    { title: "Messenger", count: 345 },
-    { title: "Community QA", count: 5323 },
-    { title: "FAQ", count: 0 }
-  ];
+  get groupsList(): GroupMessage[] {
+    return this.$store.state.profile.messageGroups;
+  }
 }
 </script>
-<style lang="scss">
-.sidebar-list {
-  display: flex;
-  flex-direction: column;
-}
-.vsm-subtitle {
-  display: flex;
-  flex-direction: column;
-  color: #fff;
-  margin-bottom: 10px;
-}
-.vsm-subtitle--title {
-  font-size: 1rem;
-  font-weight: 600;
-}
-.vsm-subtitle--group {
-  font-size: 0.8rem;
-  opacity: 0.5;
-}
-</style>

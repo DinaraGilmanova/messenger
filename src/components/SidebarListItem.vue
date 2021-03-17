@@ -1,10 +1,11 @@
 <template lang="pug">
-  .vsm--item
-    .vsm--icon
+  .group-item(@click="setCurrentMessageGroupIndex" :class="{'group-item--active': currentMessageGroupIndex === index}")
+    .group-item--icon
       i(class="fa fa-archive" aria-hidden="true")
-    .vsm--link
-      span {{item.title}}
-      span(v-if="item.count") ({{item.count}})
+    .group-item--link
+       p
+         span {{title}}
+         span(v-if="messagesCount")  ({{messagesCount}})
 </template>
 
 <script lang="ts">
@@ -12,32 +13,19 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class SidebarListItem extends Vue {
-  @Prop() private item!: { title: string; count: number };
-}
-</script>
-<style lang="scss">
-.vsm--item {
-  display: flex;
-  flex-direction: row;
-  color: #fff;
-  align-items: center;
-  opacity: 0.8;
-  padding: 2px 0;
-}
+  @Prop() private title!: string;
+  @Prop() private index!: number;
 
-.vsm--link {
-  cursor: pointer;
-  display: flex;
-  font-size: 14px;
-  text-decoration: none;
-  user-select: none;
-  &_active {
-    font-weight: 600;
+  get messagesCount(): number {
+    return this.$store.getters.messagesCount(this.index);
+  }
+
+  setCurrentMessageGroupIndex() {
+    this.$store.state.currentMessageGroupIndex = this.index;
+  }
+
+  get currentMessageGroupIndex() {
+    return this.$store.state.currentMessageGroupIndex;
   }
 }
-
-.vsm--icon {
-  display: inline-block;
-  margin-right: 10px;
-}
-</style>
+</script>

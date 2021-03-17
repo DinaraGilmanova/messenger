@@ -1,103 +1,61 @@
 <template lang="pug">
-  .main-block-wrapper--item
+  .main__list--item
     .item-info
-      .item-info--key {{item.code}}
-      .item-info--status {{item.status}}
+      .item-info--key(:class=`'item-info--key' + statusMessage`) {{item.code}}
+        img(:src="require('../assets/checkmark.svg')" alt="✔" v-if="item.closed" height="40")
+      .item-info--status(:class=`'item-info--status' + statusMessage`) {{statusOrPeriod}}
     .item-subcard
       .item-subcard--title {{item.title}}
       .item-subcard--bottom
-        .subcard-autor
-          span {{item.author}} {{item.createDate}}
+        .subcard-author
+          span {{item.author}} {{createDateString}}
         .subcard-action
-          i(class="fa fa-plus-circle" aria-hidden="true" style="font-size: 32px;")
+          button-icon
+            i.fa.fa-plus-circle.btn--icon(aria-hidden="true")
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import SideBar from "@/components/SideBar.vue";
-
-export interface Question {
-  code: string;
-  title: string;
-  author: string;
-  createDate: string;
-  status: string;
-  success: boolean;
-}
+import { Message } from "@/models/Message";
+import dayjs, { Dayjs } from "dayjs";
+import ButtonIcon from "@/ui-components/ButtonIcon.vue";
 
 @Component({
   components: {
-    SideBar
+    SideBar,
+    ButtonIcon
   }
 })
 export default class MessageItem extends Vue {
-  @Prop() private item!: Question;
-}
-</script>
+  @Prop() private item!: Message;
 
-<style lang="scss">
-.main-block-wrapper {
-  padding: 20px;
-  background-color: #dae8f3;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+  get statusMessage(): string {
+    return this.item.closed ? "__success" : "__wait";
+  }
 
-  &--item {
-    background-color: #f2f4f7;
-    color: #6e6e6e;
-    margin-bottom: 1rem;
-    padding: 0.7rem;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    min-height: 15vh;
+  get statusOrPeriod(): string {
+    const unit: "hour" | "day" = dayjs().isSame(
+      dayjs(this.item.createDate),
+      "day"
+    )
+      ? "hour"
+      : "day";
 
-    .item-info {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 0;
-      padding: 5px;
-      background-color: #cecccc;
-      border-radius: 4px;
+    return this.item.closed
+      ? "Closed"
+      : `${dayjs().diff(dayjs(this.item.createDate), unit)} ${unit.substr(
+          0,
+          1
+        )}`;
+  }
 
-      &--key {
-        font-weight: 600;
-      }
+  get createDateString(): string {
+    const createDate: Dayjs = dayjs(this.item.createDate);
 
-      &--status {
-      }
-    }
-
-    .item-subcard {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 5;
-      margin-left: 10px;
-      justify-content: space-between;
-
-      &--title {
-        display: flex;
-      }
-
-      &--bottom {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: flex-end;
-
-        .subcard-autor {
-          font-size: 0.9rem;
-          opacity: 0.5;
-          align-self: center;
-        }
-
-        .subcard-action {
-          display: flex;
-          opacity: 0.5;
-        }
-      }
-    }
+    return dayjs().isSame(createDate, "day")
+      ? createDate.format("h:mm a")
+      : createDate.format("h:mm a - D MMM");
   }
 }
-</style>
+</script>

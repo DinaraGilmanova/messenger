@@ -15,16 +15,9 @@ import MainBlock from "@/components/MainBlock.vue";
     MainBlock
   }
 })
-export default class App extends Vue {}
-</script>
-
-<style lang="scss">
-@import "styles/global";
-@import url("https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css");
-
-.container {
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
+export default class App extends Vue {
+  created() {
+    this.$store.dispatch("getInfo");
+  }
 }
-</style>
+</script>

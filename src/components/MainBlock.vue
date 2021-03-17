@@ -1,84 +1,68 @@
 <template lang="pug">
-  .main-block
-    .main-block--header
+  .main
+    .main--header
       .header--title Questions Messenger
       .header--group All Questions
-    .main-block-wrapper
-      div(v-for="item in questions")
+    .main__list(v-if="messageGroup")
+      div(v-for="item in messages")
         message-item(:item="item")
+      .main__list--item
+        textarea.item--textarea(v-model="text" placeholder="Write a new message...")
+        button-icon.subcard-action.bottom-row(@click="addMessage")
+          i.fa.fa-plus-circle.btn--icon(aria-hidden="true")
+    .main__list--empty(v-else) Add a group to add a new message
+
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import SideBar from "@/components/SideBar.vue";
-import MessageItem, { Question } from "@/components/MessageItem.vue";
+import MessageItem from "@/components/MessageItem.vue";
+import { Message } from "@/models/Message";
+import ButtonIcon from "@/ui-components/ButtonIcon.vue";
+import { GroupMessage } from "@/models/GroupMessage";
 
 @Component({
   components: {
     SideBar,
-    MessageItem
+    MessageItem,
+    ButtonIcon
   }
 })
 export default class MainBlock extends Vue {
-  public questions: Question[] = [
-    {
-      code: "Q2343",
-      title: "Hello, what is the delivery time?",
-      author: "Guest",
-      createDate: "today, 14:32",
-      status: "open",
-      success: false
-    },
-    {
-      code: "Q7643",
-      title: "Hello, do you have this item in stock?",
-      author: "Guest",
-      createDate: "10 Oct, 14:32",
-      status: "open",
-      success: false
-    },
-    {
-      code: "Q7545",
-      title: "Does this come in the colour blue?",
-      author: "Guest",
-      createDate: "10 Oct, 14:32",
-      status: "open",
-      success: false
-    }
-  ];
+  public text = "";
+
+  get currentMessageGroupIndex(): number {
+    return this.$store.state.currentMessageGroupIndex;
+  }
+
+  get messages(): Message[] {
+    return (
+      this.$store.state.profile.messageGroups[this.currentMessageGroupIndex]
+        ?.messages || []
+    );
+  }
+
+  get messageGroup(): GroupMessage | undefined {
+    return this.$store.state.profile.messageGroups[
+      this.currentMessageGroupIndex
+    ];
+  }
+
+  addMessage() {
+    const message = new Message();
+    message.title = this.text;
+    message.author = this.$store.state.profile.name;
+
+    this.$store.commit("addMessage", message);
+    this.$store.dispatch("saveInfo");
+    this.text = "";
+  }
 }
 </script>
-
 <style lang="scss">
-.main-block {
+.bottom-row {
   display: flex;
-  flex-direction: column;
-  flex-grow: 2;
-
-  &--header {
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    padding: 1rem;
-
-    .header--title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #6e6e6e;
-    }
-
-    .header--group {
-      font-size: 1rem;
-      opacity: 0.4;
-    }
-  }
-
-  .main-block-wrapper {
-    padding: 20px;
-    background-color: #dae8f3;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+  align-items: flex-end;
 }
 </style>

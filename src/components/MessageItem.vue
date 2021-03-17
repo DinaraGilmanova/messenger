@@ -1,17 +1,17 @@
 <template lang="pug">
-  .main__list--item
-    .item-info
-      .item-info--key(:class=`'item-info--key' + statusMessage`) {{item.code}}
-        img(:src="require('../assets/checkmark.svg')" alt="✔" v-if="item.closed" height="40")
-      .item-info--status(:class=`'item-info--status' + statusMessage`) {{statusOrPeriod}}
-    .item-subcard
-      .item-subcard--title {{item.title}}
-      .item-subcard--bottom
-        .subcard-author
-          span {{item.author}} {{createDateString}}
-        .subcard-action
-          button-icon
-            i.fa.fa-plus-circle.btn--icon(aria-hidden="true")
+.main__list--item
+  .item-info
+    .item-info--key(:class=`'item-info--key' + statusMessage`) {{item.code}}
+      img(:src="require('../assets/checkmark.svg')" alt="✔" v-if="item.closed" height="35")
+    .item-info--status(:class=`'item-info--status' + statusMessage`) {{statusOrPeriod}}
+  .item-subcard
+    .item-subcard--title {{item.title}}
+    .item-subcard--bottom
+      .subcard-author
+        span {{item.author}} {{createDateString}}
+      .subcard-action
+        button-icon
+          i.fa.fa-plus-circle.btn--icon(aria-hidden="true")
 </template>
 
 <script lang="ts">

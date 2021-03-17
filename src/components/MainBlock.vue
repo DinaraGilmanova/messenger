@@ -4,7 +4,7 @@
       .header--title Questions Messenger
       .header--group All Questions
     .main__list(v-if="messageGroup")
-      div(v-for="item in messages")
+      template(v-for="item in messages")
         message-item(:item="item")
       .main__list--item
         textarea.item--textarea(v-model="text" placeholder="Write a new message...")

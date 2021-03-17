@@ -1,0 +1,25 @@
+.btn {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  &--icon {
+    color: #bdbdbe;
+    font-size: 2rem;
+
+    &:active {
+      transform: scale(1.1, 1.1);
+    }
+
+    &:hover {
+      color: $gray;
+    }
+  }
+}
